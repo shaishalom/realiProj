@@ -25,9 +25,9 @@ public class QuoteTest {
 	@Autowired
 	QuoteController quoteController;
 	
-	@Test
-	public void contextLoads() {
-	}
+//	@Test
+//	public void contextLoads() {
+//	}
 	
 	@Test
 	public void TestFoundId() {
@@ -188,7 +188,6 @@ public class QuoteTest {
 		QuoteDTO  quoteCreateDTO = quoteResponse.getBody();
 		assertNull(quoteCreateDTO.getId());
 		assertTrue(quoteCreateDTO.getStatus().getOutputStatusEnum().equals(OutputStatusEnum.QUATE_NAME_ALREADY_EXIST));
-		assertNull(quoteCreateDTO.getName(),equals(quoteDTO.getName()));
 		
 
 		
