@@ -158,12 +158,7 @@ public class QuoteTest {
 		
 		try {
 			
-//			mockMvc.perform(post("/getQuoteById")
-//			   Mockito.when(mockCredentionChangeService.getUserByToken(Matchers.eq(token), Matchers.any(HttpServletRequest.class)))
-//	            .thenReturn(expectedUsername);
-
-			sendPost("http://localhost:8080/quote/getQuoteById/1", token,null);
-//			quoteResponse = quoteController.getQuoteById(1L,);
+			quoteResponse = quoteController.getQuoteById(1L);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
