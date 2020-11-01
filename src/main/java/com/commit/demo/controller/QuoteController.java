@@ -69,6 +69,30 @@ public class QuoteController extends BaseController {
 		return new ResponseEntity<QuoteDTO>(quoteOutputDTO, new HttpHeaders(), HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/getQuoteById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<QuoteDTO> getQuoteById(@PathVariable("id") Long id, HttpServletRequest request) throws Exception {
+
+		logger.info("getQuoteById REQUEST->" + id);
+
+		
+		QuoteDTO quoteOutputDTO = null;
+		try {
+			quoteOutputDTO = service.getQuoteById(id);
+		} catch (ProjBusinessException e) {
+
+			quoteOutputDTO = new QuoteDTO();
+			quoteOutputDTO.setStatus(handleBusinessException(e));
+
+			return new ResponseEntity<QuoteDTO>(quoteOutputDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		String output = StringUtils.toJson(quoteOutputDTO);
+		logger.info("createOrUpdateQuote RESPONSE->" + output);
+
+		return new ResponseEntity<QuoteDTO>(quoteOutputDTO, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	
 	@PostMapping(value = "/createOrUpdateQuote", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<QuoteDTO> createOrUpdateQuote(@RequestBody QuoteDTO quoteInput, HttpServletRequest request)
 			throws Exception {

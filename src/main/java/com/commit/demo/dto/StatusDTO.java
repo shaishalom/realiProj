@@ -10,6 +10,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @XmlRootElement
 public class StatusDTO {
 
+	public StatusDTO() {
+	}
+	
 	public StatusDTO(OutputStatusEnum outputStatusEnum, String exceptionReason) {
 		super();
 		this.outputStatusEnum = outputStatusEnum;

@@ -4,36 +4,166 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
+import javax.swing.text.View;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
+import com.commit.demo.controller.AuthController;
 import com.commit.demo.controller.QuoteController;
 import com.commit.demo.dto.ItemDTO;
+import com.commit.demo.dto.JwtResponse;
+import com.commit.demo.dto.LoginRequest;
 import com.commit.demo.dto.QuoteDTO;
+import com.commit.demo.dto.SignupRequest;
 import com.commit.demo.exception.OutputStatusEnum;
+import com.commit.demo.model.ERole;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DemoApplication.class)
 public class QuoteTest {
 
+	
+	
+	@InjectMocks
+	QuoteController controller = new QuoteController();
+//	@Mock
+//	CodeService service = new CodeService();
+	@Mock
+	View mockView;
+	MockMvc mockMvc;
+//	Code code = new Code();
+//	@Before
+//	public void setUp() throws Exception {
+//	MockitoAnnotations.initMocks(this);
+	//mockMvc = MockMvcBuilders.standaloneSetup(controller).setSingleView(mockView).build();
+	
+	
+//	@Mock
 	@Autowired
 	QuoteController quoteController;
+
 	
+	@Autowired
+	AuthController authController;
+
+	
+//	mockMvc.perform(post("/quote/id")).andExpect(status().isOk())
+	
+	String token = null;
 //	@Test
 //	public void contextLoads() {
 //	}
 	
+	
+//	@Mock
+//	private HttpServletRequest httpServletRequest;
+//	@Mock
+//	private MerchantCredentialsChangeService mockCredentionChangeService;
+	
+	@Before
+	    public void signupAndLogin() {
+			
+			Set rolesSet = new HashSet<>(Arrays.asList(ERole.ROLE_USER.toString(),ERole.ROLE_ADMIN.toString()));
+			SignupRequest signupRequest = new SignupRequest("shai","shai@111.com",rolesSet,"111111");
+
+			
+			authController.registerUser(signupRequest);
+			
+
+//			Set rolesSet = new HashSet<>(Arrays.asList(ERole.ROLE_USER.toString(),ERole.ROLE_ADMIN.toString()));
+///			SignupRequest signupRequest = new SignupRequest("shai","shai@111.com",rolesSet,"111111");
+
+			LoginRequest loginRequest = new LoginRequest("shai","111111");
+			ResponseEntity resp= authController.authenticateUser(loginRequest);
+			if (resp.getBody() != null) {
+				token = ((JwtResponse) resp.getBody()).getAccessToken();
+			}
+			
+	    }
+	
+	
+	public static String sendPost(String url, String token, String postData) {
+	    PrintWriter out = null;
+	    BufferedReader in = null;
+	    String result = "";
+	    try {
+	        URL realUrl = new URL(url);
+	        URLConnection conn = realUrl.openConnection();
+	        conn.setDoOutput(true);
+	        conn.setRequestProperty("Authorization","Bearer "+token );
+	        conn.setRequestProperty("Accept", "application/json");
+	        conn.setRequestProperty("contentType","application/json");
+	        ((HttpURLConnection) conn).setRequestMethod("POST");
+
+
+	        // build connection
+	        OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+	        writer.write(postData);
+	        writer.flush();
+	        String line;
+	        BufferedReader reader = new BufferedReader(new 
+	                                         InputStreamReader(conn.getInputStream()));
+	        while ((line = reader.readLine()) != null) {
+	          System.out.println(line);
+	        }
+	        writer.close();
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    finally {
+	        try {
+	            if (out != null) {
+	                out.close();
+	            }
+	            if (in != null) {
+	                in.close();
+	            }
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+	    return result;
+	}
+	
+	
+	
 	@Test
 	public void TestFoundId() {
 		ResponseEntity<QuoteDTO> quoteResponse = null;
+		
+		
 		try {
-			quoteResponse = quoteController.getQuoteById(1L);
+			
+//			mockMvc.perform(post("/getQuoteById")
+//			   Mockito.when(mockCredentionChangeService.getUserByToken(Matchers.eq(token), Matchers.any(HttpServletRequest.class)))
+//	            .thenReturn(expectedUsername);
+
+			sendPost("http://localhost:8080/quote/getQuoteById/1", token,null);
+//			quoteResponse = quoteController.getQuoteById(1L,);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
