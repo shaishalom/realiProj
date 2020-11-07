@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.commit.demo.dto.QuoteDTO;
@@ -46,7 +47,7 @@ public class QuoteController extends BaseController {
 		return new ResponseEntity<List<QuoteDTO>>(dtoList, new HttpHeaders(), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}")
+	//@GetMapping("/{id}")
 	public ResponseEntity<QuoteDTO> getQuoteById(@PathVariable("id") Long id) throws Exception {
 
 		logger.info("getQuoteById REQUEST->" + id);
@@ -69,7 +70,7 @@ public class QuoteController extends BaseController {
 		return new ResponseEntity<QuoteDTO>(quoteOutputDTO, new HttpHeaders(), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/getQuoteById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/getQuoteById/{id}", method = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST} , produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<QuoteDTO> getQuoteById(@PathVariable("id") Long id, HttpServletRequest request) throws Exception {
 
 		logger.info("getQuoteById REQUEST->" + id);
@@ -87,7 +88,7 @@ public class QuoteController extends BaseController {
 		}
 		
 		String output = StringUtils.toJson(quoteOutputDTO);
-		logger.info("createOrUpdateQuote RESPONSE->" + output);
+		logger.info("getQuoteById RESPONSE->" + output);
 
 		return new ResponseEntity<QuoteDTO>(quoteOutputDTO, new HttpHeaders(), HttpStatus.OK);
 	}

@@ -14,8 +14,8 @@ import javax.persistence.TemporalType;
 
 import com.commit.demo.exception.QuoteOperationEnum;
 
-@Entity (name="quoteLog")
-@Table(name="quoteLog")
+@Entity
+@Table(name="quote_Log")
 public class QuoteLogEntity {
 
 	@Id
