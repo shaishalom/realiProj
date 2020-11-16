@@ -1,4 +1,4 @@
-package com.commit.demo;
+package com.reali.demo;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
