@@ -25,12 +25,7 @@ CREATE TABLE user_roles (
 
 
 
-
---INSERT INTO users (id, username, email, password)
---VALUES
---  (1, 'shai', 'shai@gmail.com' , '111111'),
---  (2, 'guy', 'shai@gmail.com' , '222222');
-  
+ 
   
 INSERT INTO roles (id, name)
 VALUES
