@@ -15,6 +15,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -58,13 +61,7 @@ public class DemoApplication implements WebMvcConfigurer {
 		return mapper;
 
 	}
-//	@Bean
-//	public XStream xStream() {
-//
-//		return new XStream(new JsonHierarchicalStreamDriver());
-//
-//	}
-
+	
 
 	 
 		@Bean(value = "myLogger")
@@ -92,6 +89,12 @@ public class DemoApplication implements WebMvcConfigurer {
 			return myLogger;
 		}
 
+		@Bean
+		public XStream xStream() {
+
+			return new XStream(new JsonHierarchicalStreamDriver());
+
+		}
 
 
 }

@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.reali.demo.dto.ListingCriteriaDTO;
 import com.reali.demo.dto.ListingListDTO;
-import com.reali.demo.exception.ProjBusinessException;
-import com.reali.demo.service.ListingService;
+import com.reali.demo.service.ListingServiceFlow;
 import com.reali.demo.utils.StringUtils;
 
 import io.swagger.annotations.Api;
@@ -26,21 +25,27 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("")
 @Api()
-public class ListingController extends BaseController {
+public class ListingFlowController extends BaseController {
 	@Autowired
-	ListingService listingService;
+	ListingServiceFlow listingService;
 
 	@Autowired
 	Logger logger;
 
-	/**
-	 * get listing in Get
-	 * @param listingCriteriaDTO
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	@GetMapping(value = "/listings", produces = MediaType.APPLICATION_JSON_VALUE )
+	
+/**
+ * get Listing in Get using flow
+ * @param minPrice
+ * @param maxPrice
+ * @param minBed
+ * @param maxBed
+ * @param minBath
+ * @param maxBath
+ * @param request
+ * @return
+ * @throws Exception
+ */
+	@GetMapping(value = "/listingsFlow", produces = MediaType.APPLICATION_JSON_VALUE )
 	public ResponseEntity<ListingListDTO> listings(@RequestParam(value="min_price",required=false) Long minPrice,
 												   @RequestParam(value="max_price",required=false)  Long maxPrice,
 	   											   @RequestParam(value="min_bed",required=false) Integer minBed,
@@ -63,29 +68,22 @@ public class ListingController extends BaseController {
 		logger.info("listings REQUEST->" + criteriaInputStr);
 		
 		ListingListDTO listingListDTO = null;
-		try {
-			listingListDTO = listingService.filterListings(listingCriteriaDTO);
-		} catch (ProjBusinessException e) {
-			listingListDTO = new ListingListDTO();
-			
-			listingListDTO.setStatus(handleBusinessException(e));
-
-			return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		listingListDTO = (ListingListDTO) listingService.executeBusiness(listingCriteriaDTO);
 
 		String output = StringUtils.toJson(listingListDTO);
 		logger.info("listings RESPONSE->" + output);
 		return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.OK);
 	}
 	
+	
 	/**
-	 * get listing in Post
+	 * get Listing in flow using Post
 	 * @param listingCriteriaDTO
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping(value = "/listings", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/listingsFlow", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ListingListDTO> listings(@RequestBody ListingCriteriaDTO listingCriteriaDTO, HttpServletRequest request)
 			throws Exception {
 
@@ -94,15 +92,7 @@ public class ListingController extends BaseController {
 		logger.info("listings REQUEST->" + criteriaInputStr);
 		
 		ListingListDTO listingListDTO = null;
-		try {
-			listingListDTO = listingService.filterListings(listingCriteriaDTO);
-		} catch (ProjBusinessException e) {
-			listingListDTO = new ListingListDTO();
-			
-			listingListDTO.setStatus(handleBusinessException(e));
-
-			return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		listingListDTO = (ListingListDTO) listingService.executeBusiness(listingCriteriaDTO);
 
 		String output = StringUtils.toJson(listingListDTO);
 		logger.info("listings RESPONSE->" + output);

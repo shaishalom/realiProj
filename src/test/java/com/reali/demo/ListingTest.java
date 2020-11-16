@@ -11,10 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.reali.demo.DemoApplication;
 import com.reali.demo.controller.ListingController;
 import com.reali.demo.dto.ListingCriteriaDTO;
 import com.reali.demo.dto.ListingListDTO;
+import com.reali.demo.exception.OutputStatusEnum;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DemoApplication.class)
@@ -50,15 +50,16 @@ public class ListingTest {
 		ResponseEntity<ListingListDTO> listingListResponse = null;
 		
 		
+		ListingCriteriaDTO listingCriteriaDTO = new ListingCriteriaDTO();
+		listingCriteriaDTO.setMinPrice(100000L);
+		listingCriteriaDTO.setMaxPrice(90000L);
 		try {
-			ListingCriteriaDTO listingCriteriaDTO = new ListingCriteriaDTO();
-			listingCriteriaDTO.setMinPrice(100000L);
-			listingCriteriaDTO.setMaxPrice(90000L);
 			listingListResponse = listingController.listings(listingCriteriaDTO, null);
 		} catch (Exception e) {
-			//e.printStackTrace();
 		}
-		assertNull(listingListResponse);
+		ListingListDTO listingListDTO = listingListResponse.getBody();
+		assertNotNull(listingListDTO);
+		assertTrue(listingListResponse.getBody().getResultStatus().getOutputStatusEnum().equals(OutputStatusEnum.INVALID_INPUT));
 
 	}
 

@@ -67,7 +67,7 @@ public class ListingServiceFlow extends BaseServiceImpl {
 	
 	
 	/**
-	 * make the validation
+	 * make the validation (check price/bath/bedrom Min<=Max, else throw exception
 	 */
 	@Override
 	public Boolean validateInput(BaseInputDTO baseInputDTO, BaseOutputDTO baseSRQRES) throws ProjBusinessException {

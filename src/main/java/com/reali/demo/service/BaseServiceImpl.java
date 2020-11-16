@@ -10,6 +10,7 @@ import com.reali.demo.dto.BaseOutputDTO;
 import com.reali.demo.dto.StatusDTO;
 import com.reali.demo.exception.OutputStatusEnum;
 import com.reali.demo.exception.ProjBusinessException;
+import com.thoughtworks.xstream.XStream;
 
 
 @Component
@@ -17,21 +18,21 @@ public abstract class BaseServiceImpl {
 	@Autowired
 	private Logger	logger;
 
-//	@Autowired
-//	private XStream	xStream;
+	@Autowired
+	private XStream	xStream;
 
-	public BaseOutputDTO executeBusiness(BaseInputDTO baseBoREQ) {
+	public BaseOutputDTO executeBusiness(BaseInputDTO baseInputDTO) {
 		BaseOutputDTO baseOutputDTO = initResponse();
 		StopWatch clock = new StopWatch();
 		try {
 			clock.start();
-			logger.info("Start of service.  " + baseBoREQ.getClass()
-					.getSimpleName() + " " ); //+ xStream.toXML(baseBoREQ));
-			Boolean isSuccess = validateInput(baseBoREQ, baseOutputDTO);
+			logger.info("Start of service.  " + baseInputDTO.getClass()
+					.getSimpleName() + " " + xStream.toXML(baseInputDTO));
+			Boolean isSuccess = validateInput(baseInputDTO, baseOutputDTO);
 
 			if (isSuccess) {
-				baseOutputDTO = executeService(baseBoREQ, baseOutputDTO);
-				createSuccessResponse(baseBoREQ, baseOutputDTO);
+				baseOutputDTO = executeService(baseInputDTO, baseOutputDTO);
+				createSuccessResponse(baseInputDTO, baseOutputDTO);
 			}
 		} catch (Exception e) {
 			if (e instanceof ProjBusinessException) {
@@ -42,22 +43,22 @@ public abstract class BaseServiceImpl {
 
 			else {
 				logger.error(e.toString());
-				createErrorResponse(baseBoREQ, baseOutputDTO, OutputStatusEnum.UNEXPECTED);
+				createErrorResponse(baseInputDTO, baseOutputDTO, OutputStatusEnum.UNEXPECTED);
 			}
 
 			logger.debug(baseOutputDTO.getResultStatus().getFreeText(), e);
 		} finally {
 			clock.stop();
-			logger.info("End of service.  " + baseBoREQ.getClass().getSimpleName() 
+			logger.info("End of service.  " + baseInputDTO.getClass().getSimpleName() 
 					+ " lasted: (ms)" + clock.getLastTaskTimeMillis());
 
 			if (clock.getLastTaskTimeMillis() > 800) {
-				logger.warn("Slow execution of service.  " + baseBoREQ.getClass()
+				logger.warn("Slow execution of service.  " + baseInputDTO.getClass()
 						.getSimpleName() + " lasted: (ms)" + clock.getLastTaskTimeMillis());
 			}
 		}
 
-		logger.debug("End of Service of service. Output is: ");// + xStream.toXML(baseOutputDTO));
+		logger.debug("End of Service of service. Output is: "+ xStream.toXML(baseOutputDTO));
 		return baseOutputDTO;
 	}
 
