@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ListingGeoDTO extends BaseDTO{
 
 
-	private String type="Feature";
+	private String type="FeatureCollection";
 	private List<ListingGeoFeaturesDTO> features;
 	
 	public String getType() {

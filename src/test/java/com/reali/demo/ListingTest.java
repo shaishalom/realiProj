@@ -33,7 +33,7 @@ public class ListingTest {
 		
 		try {
 			ListingCriteriaDTO listingCriteriaDTO = new ListingCriteriaDTO();
-			listingCriteriaDTO.setMinPrice(100000L);
+			listingCriteriaDTO.setMinBedRooms(6);
 			listingGeoResponse = listingController.listings(listingCriteriaDTO, null);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,7 +71,7 @@ public class ListingTest {
 		
 		try {
 			ListingCriteriaDTO listingCriteriaDTO = new ListingCriteriaDTO();
-			listingCriteriaDTO.setMinBath(5);
+			listingCriteriaDTO.setMinBath(6);
 			listingGeoResponse = listingController.listings(listingCriteriaDTO, null);
 		} catch (Exception e) {
 			e.printStackTrace();
