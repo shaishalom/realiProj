@@ -12,11 +12,14 @@ import com.reali.demo.exception.OutputStatusEnum;
 @XmlRootElement
 public class ListingListDTO extends BaseOutputDTO{
 
+	
+	
 	public ListingListDTO() {
 		this.setStatus(new StatusDTO(OutputStatusEnum.SUCCESS, "", ""));
 	}
 
 	private List<ListingDTO> listingList;
+	private String type="FeatureCollection";
 
 	public List<ListingDTO> getListingList() {
 		return listingList;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reali.demo.dto.ListingCriteriaDTO;
+import com.reali.demo.dto.ListingGeoDTO;
 import com.reali.demo.dto.ListingListDTO;
 import com.reali.demo.exception.ProjBusinessException;
 import com.reali.demo.service.ListingService;
@@ -41,7 +42,7 @@ public class ListingController extends BaseController {
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/listings", produces = MediaType.APPLICATION_JSON_VALUE )
-	public ResponseEntity<ListingListDTO> listings(@RequestParam(value="min_price",required=false) Long minPrice,
+	public ResponseEntity<ListingGeoDTO> listings(@RequestParam(value="min_price",required=false) Long minPrice,
 												   @RequestParam(value="max_price",required=false)  Long maxPrice,
 	   											   @RequestParam(value="min_bed",required=false) Integer minBed,
 	   											   @RequestParam(value="max_bed",required=false) Integer maxBed,
@@ -62,20 +63,20 @@ public class ListingController extends BaseController {
 		String criteriaInputStr = StringUtils.toJson(listingCriteriaDTO);
 		logger.info("listings REQUEST->" + criteriaInputStr);
 		
-		ListingListDTO listingListDTO = null;
+		ListingGeoDTO listingGeoDTO = null;
 		try {
-			listingListDTO = listingService.filterListings(listingCriteriaDTO);
+			listingGeoDTO = listingService.filterListings(listingCriteriaDTO);
 		} catch (ProjBusinessException e) {
-			listingListDTO = new ListingListDTO();
+			listingGeoDTO = new ListingGeoDTO();
 			
-			listingListDTO.setStatus(handleBusinessException(e));
+			//listingGeoDTO.setStatus(handleBusinessException(e));
 
-			return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ListingGeoDTO>(listingGeoDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		String output = StringUtils.toJson(listingListDTO);
+		String output = StringUtils.toJson(listingGeoDTO);
 		logger.info("listings RESPONSE->" + output);
-		return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<ListingGeoDTO>(listingGeoDTO, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
@@ -86,27 +87,27 @@ public class ListingController extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/listings", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ListingListDTO> listings(@RequestBody ListingCriteriaDTO listingCriteriaDTO, HttpServletRequest request)
+	public ResponseEntity<ListingGeoDTO> listings(@RequestBody ListingCriteriaDTO listingCriteriaDTO, HttpServletRequest request)
 			throws Exception {
 
 		
 		String criteriaInputStr = StringUtils.toJson(listingCriteriaDTO);
 		logger.info("listings REQUEST->" + criteriaInputStr);
 		
-		ListingListDTO listingListDTO = null;
+		ListingGeoDTO listingGeoDTO = null;
 		try {
-			listingListDTO = listingService.filterListings(listingCriteriaDTO);
+			listingGeoDTO = listingService.filterListings(listingCriteriaDTO);
 		} catch (ProjBusinessException e) {
-			listingListDTO = new ListingListDTO();
+			listingGeoDTO = new ListingGeoDTO();
 			
-			listingListDTO.setStatus(handleBusinessException(e));
+			//listingGeoDTO.setStatus(handleBusinessException(e));
 
-			return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ListingGeoDTO>(listingGeoDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		String output = StringUtils.toJson(listingListDTO);
+		String output = StringUtils.toJson(listingGeoDTO);
 		logger.info("listings RESPONSE->" + output);
-		return new ResponseEntity<ListingListDTO>(listingListDTO, new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<ListingGeoDTO>(listingGeoDTO, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	

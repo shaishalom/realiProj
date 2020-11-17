@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.reali.demo.converter.ListingListToListingGeoConverter;
 import com.reali.demo.dto.BaseInputDTO;
-import com.reali.demo.dto.BaseOutputDTO;
 import com.reali.demo.dto.ListingCriteriaDTO;
 import com.reali.demo.dto.ListingDTO;
+import com.reali.demo.dto.ListingGeoDTO;
 import com.reali.demo.dto.ListingListDTO;
 import com.reali.demo.dto.StatusDTO;
 import com.reali.demo.exception.OutputStatusEnum;
@@ -31,6 +33,10 @@ public class ListingService {
 	protected ModelMapper modelMapper;
 	
 
+	@Autowired
+	@Qualifier("listingListToListingGeoConverter")
+	ListingListToListingGeoConverter listingListToListingGeoConverter;
+
 	
 	@Autowired
 	Logger logger;
@@ -44,7 +50,7 @@ public class ListingService {
 	 * @return
 	 * @throws ProjBusinessException
 	 */
-	public ListingListDTO filterListings(ListingCriteriaDTO listingCriteriaDTO) throws ProjBusinessException {
+	public ListingGeoDTO filterListings(ListingCriteriaDTO listingCriteriaDTO) throws ProjBusinessException {
 		
 		validateInput (listingCriteriaDTO);
 		
@@ -54,7 +60,11 @@ public class ListingService {
 		
 		List<ListingDTO> filterList = allList.stream().filter(listingPredicate).collect(Collectors.toList());  
 		listingListDTO.setListingList(filterList);
-		return listingListDTO;
+		
+		ListingGeoDTO listingGeoDTO = listingListToListingGeoConverter.apply(listingListDTO);
+
+		
+		return listingGeoDTO;
 		
 	}
 	
